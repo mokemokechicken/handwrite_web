@@ -1,0 +1,26 @@
+{% extends "base.tmpl" %}
+
+{% block title %}Index{% endblock %}
+
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<canvas id="canvas" width="300" height="300"></canvas>
+
+{% endblock %}
+
+
+
+{% block page_js %}
+<script type="text/javascript">
+var hw;
+$(function() {
+	hw = HW.create().setup({
+	    canvas: "canvas",
+	}).start();
+});
+</script>
+{% endblock %}
+

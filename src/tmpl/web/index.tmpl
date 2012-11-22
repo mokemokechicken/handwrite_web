@@ -4,11 +4,15 @@
 
 
 {% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 {% endblock %}
 
 {% block body %}
 <canvas id="canvas" width="300" height="300"></canvas>
-
+<div>
+<button id="btnClear">Clear</button>
+<button id="btnSave">Save</button>
+</div>
 {% endblock %}
 
 
@@ -19,6 +23,9 @@ var hw;
 $(function() {
 	hw = HW.create().setup({
 	    canvas: "canvas",
+	    btnClear: "btnClear",
+	    btnSave: "btnSave",
+	    serverUrl: "/api/",
 	}).start();
 });
 </script>

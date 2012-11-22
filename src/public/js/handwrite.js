@@ -28,7 +28,7 @@ HW.create = function() {
         view.btnSave.click(function() {
             repository.addHWData(model,{
                 size: [view.canvas.width(), view.canvas.height()]
-            });
+            }, drawStrokes);
         });
         // Repository
         repository = HW.repository.create(endpoint);
@@ -74,6 +74,21 @@ HW.create = function() {
         //context2d.font = "50px 'ヒラギノ明朝 Pro'"
     }
     
+    
+    var drawStrokes = function(strokes) {
+        var context = context2d;
+        context.lineWidth = that.options.pw/2;
+        context.strokeStyle = "red";
+        context.beginPath();
+        $.each(strokes, function(i, stroke) {
+            context.moveTo(stroke[0][0], stroke[0][1]);
+            $.each(stroke.slice(1), function(j, p) {
+                context.lineTo(p[0], p[1]);
+            })
+        });
+        context.stroke();
+    }
+    
     that.start = function(info) {
         console.log("started");
         info = info || {};
@@ -103,6 +118,7 @@ HW.create = function() {
 
         context2d.beginPath();
         context2d.lineWidth = that.options.pw;
+        context2d.strokeStyle = "#000";
         context2d.moveTo(lastPoint[0], lastPoint[1]);
         context2d.lineTo(x,y);
         context2d.stroke();
@@ -144,7 +160,7 @@ HW.model.create = function() {
 HW.repository = {};
 HW.repository.create = function(endpoint) {
     var that = {};
-    that.addHWData = function(model, meta) {
+    that.addHWData = function(model, meta, callback) {
         var data;
         data = {
                 meta: meta,
@@ -152,9 +168,11 @@ HW.repository.create = function(endpoint) {
                 strokes: model.strokes
         };
         var postString = JSON.stringify(data);
-        console.log(postString);
         $.post(endpoint.server + "hwdata", postString, function(response) {
-            console.log(response);
+            if (response.success && callback) {
+                console.log(response.strokes);
+                callback(response.strokes);
+            }
         });
     }
     return that;

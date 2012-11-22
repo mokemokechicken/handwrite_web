@@ -8,3 +8,9 @@ class HWData(models.Model):
     height = models.IntegerField()
     strokes = models.TextField()
 
+    @classmethod
+    def copy(cls, hwdata):
+        ret = cls(char=hwdata.char, width=hwdata.width, height=hwdata.height,
+                  strokes=hwdata.strokes
+                  )
+        return ret

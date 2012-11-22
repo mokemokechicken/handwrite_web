@@ -9,8 +9,26 @@ from web.models import HWData
 import json
 import math
 
-def convert_strokes_to_16signals(hwdata):
-    pass
+def convert_strokes_to_16signals(hwdata, n_direction=8):
+    output = []
+    last_point = None
+    for stroke in json.loads(hwdata.strokes):
+        prev_point = stroke[0]
+        if last_point:
+            direction = calc_direction(last_point, prev_point, n_direction)
+            distance = calc_distance(last_point, prev_point, hwdata.width, hwdata.height)
+            vector = [0] * (n_direction*2)
+            vector[direction+n_direction] = distance
+            output.append(vector)
+        for point in stroke[1:]:
+            direction = calc_direction(prev_point, point, n_direction)
+            distance = calc_distance(prev_point, point, hwdata.width, hwdata.height)
+            vector = [0]* (n_direction*2)
+            vector[direction] = distance
+            output.append(vector)
+            prev_point = point
+        last_point = prev_point
+    return output
 
 def convert_strokes_simply(hwdata, n_direction=8, dist_threshold=0.05):
     """
@@ -49,6 +67,6 @@ def calc_direction(prev_point, point, n_direction):
     dy = float(point[1]) - float(prev_point[1])
     unit_arg = ((2*math.pi)/n_direction)
     direction = round(math.atan2(dy, dx)/unit_arg) % n_direction
-    return direction
+    return int(direction)
     
 

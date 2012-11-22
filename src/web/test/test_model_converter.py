@@ -20,6 +20,9 @@ class ModelConverterTest(TestCase):
         d = t.calc_distance([10,10], [13, 14], 10, 10)
         self.assertEquals(0.5, d)
 
+        d = t.calc_distance([10,10], [13, 14], 10, 10, noise_range=[1.1,1.99])
+        self.assertTrue(0.5 < d < 1.0)
+
     def test_calc_direction(self):
         d = t.calc_direction([10,10], [15,10], 8)
         self.assertEquals(0, d)

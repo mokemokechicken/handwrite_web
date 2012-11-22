@@ -8,8 +8,9 @@ Created on 2012/11/22
 from web.models import HWData
 import json
 import math
+import random
 
-def convert_strokes_to_16signals(hwdata, n_direction=8):
+def convert_strokes_to_16signals(hwdata, n_direction=8, noise_range=None):
     output = []
     last_point = None
     for stroke in json.loads(hwdata.strokes):
@@ -56,15 +57,23 @@ def convert_strokes_simply(hwdata, n_direction=8, dist_threshold=0.05):
     sdata.strokes = json.dumps(new_strokes)
     return sdata
 
-def calc_distance(prev_point, point, width, height):
-    dx = (float(point[0]) - float(prev_point[0])) / width
-    dy = (float(point[1]) - float(prev_point[1])) / height
+def calc_distance(prev_point, point, width, height, noise_range=None):
+    noise_x = noise_y = 1
+    if noise_range:
+        noise_x = random.uniform(*noise_range)
+        noise_y = random.uniform(*noise_range)
+    dx = ((float(point[0]) - float(prev_point[0])) / width) * noise_x
+    dy = ((float(point[1]) - float(prev_point[1])) / height) * noise_y
     return math.sqrt(dx*dx+dy*dy)
     
 
-def calc_direction(prev_point, point, n_direction):
-    dx = float(point[0]) - float(prev_point[0])
-    dy = float(point[1]) - float(prev_point[1])
+def calc_direction(prev_point, point, n_direction, noise_range=None):
+    noise_x = noise_y = 1
+    if noise_range:
+        noise_x = random.uniform(*noise_range)
+        noise_y = random.uniform(*noise_range)
+    dx = (float(point[0]) - float(prev_point[0])) * noise_x
+    dy = (float(point[1]) - float(prev_point[1])) * noise_y
     unit_arg = ((2*math.pi)/n_direction)
     direction = round(math.atan2(dy, dx)/unit_arg) % n_direction
     return int(direction)

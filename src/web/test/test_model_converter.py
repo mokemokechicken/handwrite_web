@@ -43,19 +43,20 @@ class ModelConverterTest(TestCase):
         strokes.append([[5,7], [5,5]])
         vectors = t.convert_strokes_to_16signals(self.make_hwdata(strokes), 8)
         #
-        v = vectors[0]
+        N=16
+        v = vectors[0:N]
         self.assertEquals(0.3, v[0])
         self.assertEquals(0.3, sum(v))
         #
-        v = vectors[1]
+        v = vectors[N*1:N*2]
         self.assertEquals(0.2, v[2])
         self.assertEquals(0.2, sum(v))
         #
-        v = vectors[2]
+        v = vectors[N*2:N*3]
         self.assertEquals(0.3, v[4+8])
         self.assertEquals(0.3, sum(v))
         #
-        v = vectors[3]
+        v = vectors[N*3:N*4]
         self.assertEquals(0.2, v[6])
         self.assertEquals(0.2, sum(v))
         print vectors

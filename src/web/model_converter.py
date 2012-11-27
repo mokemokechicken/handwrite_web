@@ -20,13 +20,13 @@ def convert_strokes_to_16signals(hwdata, n_direction=8, noise_range=None):
             distance = calc_distance(last_point, prev_point, hwdata.width, hwdata.height)
             vector = [0] * (n_direction*2)
             vector[direction+n_direction] = distance
-            output.append(vector)
+            output.extend(vector)
         for point in stroke[1:]:
             direction = calc_direction(prev_point, point, n_direction)
             distance = calc_distance(prev_point, point, hwdata.width, hwdata.height)
             vector = [0]* (n_direction*2)
             vector[direction] = distance
-            output.append(vector)
+            output.extend(vector)
             prev_point = point
         last_point = prev_point
     return output

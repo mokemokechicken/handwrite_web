@@ -1,0 +1,7 @@
+Django==1.4.2
+distribute==0.6.28
+django-nose==1.1
+git-remote-helpers==0.1.0
+mock==1.0.1
+nose==1.2.1
+wsgiref==0.1.2

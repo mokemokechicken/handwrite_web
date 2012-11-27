@@ -7,6 +7,9 @@ class HWData(models.Model):
     width = models.IntegerField()
     height = models.IntegerField()
     strokes = models.TextField()
+    validated = models.BooleanField(default=False)
+    create_datetime = models.DateTimeField(auto_now_add=True)
+    update_datetime = models.DateTimeField(auto_now=True)
 
     @classmethod
     def copy(cls, hwdata):

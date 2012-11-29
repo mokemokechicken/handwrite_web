@@ -70,6 +70,7 @@ HW.create = function() {
         
         context2d = canvas[0].getContext("2d");
         context2d.lineJoin = "round";
+        context2d.fillStyle = "black";
         context2d.font = "50px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
         //context2d.font = "50px 'ヒラギノ明朝 Pro'"
     }
@@ -87,7 +88,17 @@ HW.create = function() {
             })
         });
         context.lineWidth = 2;
-        context.fillText(that.options.chars[argmax(ys)], view.canvas.width()-60, 50)
+        var predOrder = valueOrder(ys);
+        console.log([ys, predOrder]);
+        for (var i=0; i<6; i++) {
+            context.font = "50px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
+            context.fillStyle = "black";
+            context.fillText(that.options.chars[predOrder[i]], view.canvas.width()-70, 50 + i*50);
+            context.font = "10px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'";
+            context.fillStyle = "red";
+            var p = Math.floor(ys[predOrder[i]] * 1000) / 10;
+            context.fillText(p + "%" , view.canvas.width()-30, i*50+50);
+        }
         context.stroke();
     }
     
@@ -103,6 +114,19 @@ HW.create = function() {
         return maxidx;
     }
     
+    var valueOrder = function(ary) {
+        var tmp = [];
+        for (var i=0; i<ary.length; i++) {
+            tmp.push([ary[i], i]);
+        }
+        var sorted = $(tmp).sort(function(a,b) {return b[0]-a[0];});
+        var ret = [];
+        for (var i=0; i<sorted.length; i++) {
+            ret.push(sorted[i][1]);
+        }
+        return ret;
+    }
+    
     that.start = function(info) {
         console.log("started");
         info = info || {};
@@ -112,6 +136,8 @@ HW.create = function() {
         model = HW.model.create();
         context2d.clearRect(0, 0, view.canvas.width(), view.canvas.height());
         context2d.lineWidth = 2;
+        context2d.fillStyle = "black";
+        context2d.font = "50px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
         context2d.fillText(info.char, 0, 50);
         model.char = info.char;
         return that;

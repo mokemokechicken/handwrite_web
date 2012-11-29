@@ -13,27 +13,30 @@ import csv
 NUMINS = 16 * 50
 
 def get_data_service(request):
+    noise_range = request.GET.get("noise_range")
+    multiply = int(request.GET.get("multiply", 1))
     char_map = get_char_map()
     hwdataset = HWData.objects.filter(char__in = char_map.keys())
     numouts = len(char_map.keys())
     buf = StringIO()
     writer = csv.writer(buf)
+    if noise_range:
+        noise_range = [float(x) for x in noise_range.split(",")]
     for hwdata in hwdataset:
         sdata = convert_strokes_simply(hwdata)
-        in_x = convert_strokes_to_16signals(sdata)
-        if len(in_x) < NUMINS:
-            in_x.extend([0] * (NUMINS-len(in_x)))
-        #
-        out = char_map[hwdata.char]
-        out_array = ["0"] * numouts
-        out_array[out] = "1"
-        #
-        writer.writerow([str(x) for x in ([hwdata.id] + in_x + out_array)])
+        for _ in range(multiply):
+            in_x = convert_strokes_to_16signals(sdata, noise_range=noise_range)
+            if len(in_x) < NUMINS:
+                in_x.extend([0] * (NUMINS-len(in_x)))
+            #
+            out = char_map[hwdata.char]
+            #
+            writer.writerow([str(x) for x in ([hwdata.id] + in_x + [out])])
     #
     info = {
             "in": NUMINS,
             "out": numouts,
-            "row": len(hwdataset),
+            "row": len(hwdataset) * multiply,
             }
     data = buf.getvalue()
     buf.close()

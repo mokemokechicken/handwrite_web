@@ -16,14 +16,14 @@ def convert_strokes_to_16signals(hwdata, n_direction=8, noise_range=None):
     for stroke in json.loads(hwdata.strokes):
         prev_point = stroke[0]
         if last_point:
-            direction = calc_direction(last_point, prev_point, n_direction)
-            distance = calc_distance(last_point, prev_point, hwdata.width, hwdata.height)
+            direction = calc_direction(last_point, prev_point, n_direction, noise_range=noise_range)
+            distance = calc_distance(last_point, prev_point, hwdata.width, hwdata.height, noise_range=noise_range)
             vector = [0] * (n_direction*2)
             vector[direction+n_direction] = distance
             output.extend(vector)
         for point in stroke[1:]:
-            direction = calc_direction(prev_point, point, n_direction)
-            distance = calc_distance(prev_point, point, hwdata.width, hwdata.height)
+            direction = calc_direction(prev_point, point, n_direction, noise_range=noise_range)
+            distance = calc_distance(prev_point, point, hwdata.width, hwdata.height, noise_range=noise_range)
             vector = [0]* (n_direction*2)
             vector[direction] = distance
             output.extend(vector)

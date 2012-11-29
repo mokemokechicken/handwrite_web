@@ -75,7 +75,7 @@ HW.create = function() {
     }
     
     
-    var drawStrokes = function(strokes) {
+    var drawStrokes = function(strokes, ys) {
         var context = context2d;
         context.lineWidth = that.options.pw/2;
         context.strokeStyle = "red";
@@ -86,7 +86,21 @@ HW.create = function() {
                 context.lineTo(p[0], p[1]);
             })
         });
+        context.lineWidth = 2;
+        context.fillText(that.options.chars[argmax(ys)], view.canvas.width()-60, 50)
         context.stroke();
+    }
+    
+    var argmax = function(ary) {
+        var maxidx = 0;
+        var maxval = -9999999999999999999
+        for (var i=0; i<ary.length; i++) {
+            if (ary[i] > maxval) {
+                maxval = ary[i];
+                maxidx = i;
+            }
+        }
+        return maxidx;
     }
     
     that.start = function(info) {
@@ -170,8 +184,7 @@ HW.repository.create = function(endpoint) {
         var postString = JSON.stringify(data);
         $.post(endpoint.server + "hwdata", postString, function(response) {
             if (response.success && callback) {
-                console.log(response.strokes);
-                callback(response.strokes);
+                callback(response.strokes, response.ys);
             }
         });
     }

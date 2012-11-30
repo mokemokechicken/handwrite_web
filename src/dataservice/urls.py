@@ -4,9 +4,10 @@ from django.conf.urls import patterns, include, url
 # from django.contrib import admin
 # admin.autodiscover()
 
-from apis import api_data_service
+from apis import api_dataset_service, api_datainfo_service
 
 urlpatterns = patterns('',
     # API
-    url(r'api/dataset/(?P<chartype>[^/]+)$', api_data_service),
+    url(r'api/dataset/(?P<chartype>[^/]+)$', api_dataset_service),
+    url(r'api/datainfo/(?P<chartype>[^/]+)$', api_datainfo_service),
 )

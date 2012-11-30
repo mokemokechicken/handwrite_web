@@ -13,12 +13,13 @@ from handwrite_web.data_config import get_chars
 
 NUMINS = 16 * 50
 
-def get_data_service(request, chartype):
+def dataset_service(request, chartype):
     noise_range = request.GET.get("noise_range")
     multiply = int(request.GET.get("multiply", 1))
     char_map = get_char_map(get_chars(chartype))
     hwdataset = HWData.objects.filter(char__in = char_map.keys())
     numouts = len(char_map.keys())
+    #
     buf = StringIO()
     writer = csv.writer(buf)
     if noise_range:
@@ -42,7 +43,17 @@ def get_data_service(request, chartype):
     data = buf.getvalue()
     buf.close()
     return data, info
-    
+
+def datainfo_service(request, chartype):
+    multiply = int(request.GET.get("multiply", 1))
+    char_map = get_char_map(get_chars(chartype))
+    hwdata_count = HWData.objects.filter(char__in = char_map.keys()).count()
+    numouts = len(char_map.keys())
+    return True, {
+        "in": NUMINS,
+        "out": numouts,
+        "row": hwdata_count * multiply,
+    }
 
 def get_char_map(chars):
     retmap = {}

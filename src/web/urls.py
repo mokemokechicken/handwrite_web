@@ -8,14 +8,19 @@ from django.conf.urls import patterns, include, url
 # from django.contrib import admin
 # admin.autodiscover()
 
-from .views import page_index, page_training
+from .views import page_index, page_training, page_top
 from .apis import api_hwdata
 
 
+
+default_chartype = "numbers"
+
 urlpatterns = patterns('',
-    url(r'^training$', page_training),
-    url(r'^$', page_index),
+    url(r'^(?P<chartype>[^./]+)/training$', page_training),
+    url(r'^(?P<chartype>[^./]+)/$', page_index),
+    url(r'^$', page_top),
     
     # API
-    url(r'api/hwdata', api_hwdata),
+    url(r'(?P<chartype>[^./]+)/api/hwdata', api_hwdata),
+    url(r'api/hwdata', api_hwdata, {"chartype": default_chartype}),
 )

@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_view_exempt
 
 
 @csrf_view_exempt
-def api_hwdata(request):
+def api_hwdata(request, chartype):
     if request.method not in ("POST", "GET"):
         return json_response({"message": "HTTP Method Error"})
     if request.method == "POST":
@@ -21,7 +21,7 @@ def api_hwdata(request):
     else:
         will_save = False
         data = request.GET["json"]
-    success, response = service_post_hwdata(request, data, will_save)
+    success, response = service_post_hwdata(request, chartype, data, will_save)
     if success:
         return json_response(response)
     else:

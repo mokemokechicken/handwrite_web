@@ -9,10 +9,11 @@ import json
 from web.models import HWData
 from web.model_converter import convert_strokes_simply,\
     convert_strokes_to_16signals
+from handwrite_web.data_config import get_host_port
 
 NUMINS = 16*50
 
-def service_post_hwdata(request, data, will_save):
+def service_post_hwdata(request, chartype, data, will_save):
     try:
         hwdata = json.loads(data)
         meta = hwdata["meta"]
@@ -30,7 +31,10 @@ def service_post_hwdata(request, data, will_save):
         in_x = convert_strokes_to_16signals(simple_hwdata)
         if len(in_x) < NUMINS:
             in_x.extend([0] * (NUMINS-len(in_x)))
-        ys = service_infer(in_x)
+        try:
+            ys = service_infer(chartype, in_x)
+        except:
+            ys = [0] * 10
         ######################################
         ######################################
         ######################################
@@ -45,10 +49,10 @@ from interface import Infer
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
-def service_infer(xs):
-    
+def service_infer(chartype, xs):
+    host, port = get_host_port(chartype)
     # Make socket
-    transport = TSocket.TSocket('localhost', 9999)
+    transport = TSocket.TSocket(host, port)
     
     # Buffering is critical. Raw sockets are very slow
     transport = TTransport.TBufferedTransport(transport)

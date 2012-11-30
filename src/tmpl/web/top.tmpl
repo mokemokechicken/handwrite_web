@@ -1,0 +1,25 @@
+{% extends "base.tmpl" %}
+
+{% block title %}手書き認識 目次{% endblock %}
+
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+{% endblock %}
+
+{% block body %}
+<div style="margin: 3px">
+<h1>数字のみ</h1>
+<ul>
+<li><a href="/numbers/">お試しモード</a></li>
+<li><a href="/numbers/training">調教モード</a></li>
+</ul>
+<h1>数字とひらがな</h1>
+<ul>
+<li><a href="/num_hira/">お試しモード</a></li>
+<li><a href="/num_hira/training">調教モード</a></li>
+</ul>
+</div>
+{% endblock %}
+
+

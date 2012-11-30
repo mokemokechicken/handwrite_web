@@ -9,13 +9,14 @@ from web.models import HWData
 from web.model_converter import convert_strokes_to_16signals, convert_strokes_simply
 from cStringIO import StringIO
 import csv
+from handwrite_web.data_config import get_chars
 
 NUMINS = 16 * 50
 
-def get_data_service(request):
+def get_data_service(request, chartype):
     noise_range = request.GET.get("noise_range")
     multiply = int(request.GET.get("multiply", 1))
-    char_map = get_char_map()
+    char_map = get_char_map(get_chars(chartype))
     hwdataset = HWData.objects.filter(char__in = char_map.keys())
     numouts = len(char_map.keys())
     buf = StringIO()
@@ -43,7 +44,7 @@ def get_data_service(request):
     return data, info
     
 
-def get_char_map(chars=u"０１２３４５６７８９"):
+def get_char_map(chars):
     retmap = {}
     for index, char in enumerate(chars):
         retmap[char] = index

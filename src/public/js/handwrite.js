@@ -21,7 +21,7 @@ HW.create = function() {
         // Init Options
         that.options = options;
         that.options.pw = options.pw || 5;
-        that.options.chars = options.chars || "０１２３４５６７８９".split("");
+        // that.options.chars = options.chars; // || "０１２３４５６７８９".split("");
         // Register EventHandler
         setupCanvas(view.canvas);
         view.btnClear.click(function() {
@@ -96,7 +96,6 @@ HW.create = function() {
         });
         context.lineWidth = 2;
         var predOrder = valueOrder(ys);
-        console.log([ys, predOrder]);
         for (var i=0; i<6; i++) {
             context.font = "50px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
             context.fillStyle = "black";
@@ -135,15 +134,15 @@ HW.create = function() {
     }
     
     that.start = function(info) {
-        console.log("started");
+        // console.log("started");
         info = info || {};
         if (!info.char) {
             info.char = selectCharRandom();
         }
+        context2d.clearRect(0, 0, view.canvas.width(), view.canvas.height());
+        context2d.lineWidth = 2;
         model = HW.model.create();
         if (that.options.training) {
-            context2d.clearRect(0, 0, view.canvas.width(), view.canvas.height());
-            context2d.lineWidth = 2;
             context2d.fillStyle = "black";
             context2d.font = "50px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
             context2d.fillText(info.char, 0, 50);

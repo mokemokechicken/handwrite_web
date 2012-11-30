@@ -12,8 +12,6 @@ from web.model_converter import convert_strokes_simply,\
 
 NUMINS = 16*50
 
-import sys
-
 def service_post_hwdata(request, data, will_save):
     try:
         hwdata = json.loads(data)

@@ -1,6 +1,17 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
 .canvas { 
     border: 1px solid;
     margin-top: 0px;
-    margin-left: 0px;
+    margin-left: 0 auto;
+    margin-right: 0 auto;
+    
 }
 
+.button {
+    padding: 5px;
+    font-size: x-large;
+}

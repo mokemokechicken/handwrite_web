@@ -1,6 +1,6 @@
 {% extends "base.tmpl" %}
 
-{% block title %}推測モード{% endblock %}
+{% block title %}調教モード{% endblock %}
 
 
 {% block head %}
@@ -8,14 +8,18 @@
 {% endblock %}
 
 {% block body %}
+
 <div style="width: 300px; margin: auto;">
-	<canvas id="canvas" class="canvas" width="300" height="300"></canvas>
-	<div>
-	<div style="float:left;"> <button id="btnInfer" class="button">Guess</button> </div>
-	<div style="float:right;"> <button id="btnClear" class="button">Next</button> </div>
-	</div>
+    <canvas id="canvas" class="canvas" width="300" height="300"></canvas>
+    <div>
+    <div style="float:left;"> <button id="btnSave" class="button">Save</button> </div>
+    <div style="float:right;"> <button id="btnClear" class="button">Next</button> </div>
+    </div>
 </div>
+
 {% endblock %}
+
+
 
 {% block page_js %}
 <script type="text/javascript">
@@ -23,10 +27,11 @@ var hw;
 $(function() {
 	hw = HW.create().setup({
         canvas: "canvas",
+        canvas2: "canvas2",
 	    btnClear: "btnClear",
-	    btnInfer: "btnInfer",
+	    btnSave: "btnSave",
 	    serverUrl: "/api/",
-	    training: false,
+        training: true,
 	}).start();
 });
 </script>

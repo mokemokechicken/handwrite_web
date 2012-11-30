@@ -14,16 +14,17 @@ NUMINS = 16*50
 
 import sys
 
-def service_post_hwdata(request, ):
+def service_post_hwdata(request, data, will_save):
     try:
-        hwdata = json.loads(request.raw_post_data)
+        hwdata = json.loads(data)
         meta = hwdata["meta"]
         model = HWData()
         model.width = meta["size"][0]
         model.height = meta["size"][1]
         model.char = hwdata["char"]
         model.strokes = json.dumps(hwdata["strokes"])
-        model.save()
+        if will_save:
+            model.save()
         simple_hwdata = convert_strokes_simply(model)
         ######################################
         ######################################

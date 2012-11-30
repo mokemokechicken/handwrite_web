@@ -13,8 +13,10 @@ HW.create = function() {
     
     that.setup = function(options) {
         view.canvas = $("#" + options.canvas);
+        
         view.btnClear = $("#" + options.btnClear);
         view.btnSave = $("#" + options.btnSave);
+        view.btnInfer = $("#" +options.btnInfer)
         endpoint.server = options.serverUrl;
         // Init Options
         that.options = options;
@@ -26,9 +28,14 @@ HW.create = function() {
             that.start();
         });
         view.btnSave.click(function() {
-            repository.addHWData(model,{
+            repository.infer(model,{
                 size: [view.canvas.width(), view.canvas.height()]
-            }, drawStrokes);
+            }, drawStrokes, true);
+        });
+        view.btnInfer.click(function() {
+            repository.infer(model,{
+                size: [view.canvas.width(), view.canvas.height()]
+            }, drawStrokes, false);
         });
         // Repository
         repository = HW.repository.create(endpoint);
@@ -134,12 +141,14 @@ HW.create = function() {
             info.char = selectCharRandom();
         }
         model = HW.model.create();
-        context2d.clearRect(0, 0, view.canvas.width(), view.canvas.height());
-        context2d.lineWidth = 2;
-        context2d.fillStyle = "black";
-        context2d.font = "50px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
-        context2d.fillText(info.char, 0, 50);
-        model.char = info.char;
+        if (that.options.training) {
+            context2d.clearRect(0, 0, view.canvas.width(), view.canvas.height());
+            context2d.lineWidth = 2;
+            context2d.fillStyle = "black";
+            context2d.font = "50px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
+            context2d.fillText(info.char, 0, 50);
+            model.char = info.char;
+        }
         return that;
     }
     
@@ -200,20 +209,29 @@ HW.model.create = function() {
 HW.repository = {};
 HW.repository.create = function(endpoint) {
     var that = {};
-    that.addHWData = function(model, meta, callback) {
+    that.infer = function(model, meta, callback, isSave) {
         var data;
         data = {
                 meta: meta,
                 char: model.char,
                 strokes: model.strokes
         };
-        var postString = JSON.stringify(data);
-        $.post(endpoint.server + "hwdata", postString, function(response) {
+
+        var params = JSON.stringify(data);
+        var responseHandler = function(response) {
             if (response.success && callback) {
                 callback(response.strokes, response.ys);
             }
-        });
+        }
+        if (isSave) {
+            $.post(endpoint.server + "hwdata", params, responseHandler);
+        } else {
+            params = "json=" + params;
+            $.get(endpoint.server + "hwdata", params, responseHandler);
+        }
     }
+    
+    
     return that;
 }
 

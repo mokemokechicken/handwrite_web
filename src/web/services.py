@@ -7,15 +7,16 @@ Created on 2012/11/22
 
 import json
 from web.models import HWData
-from web.model_converter import convert_strokes_simply,\
-    convert_strokes_to_16signals
 from handwrite_web.data_config import get_host_port
+from hwencoder.factory import create_converter
+import logging
 
-NUMINS = 16*50
 
 def service_post_hwdata(request, chartype, data, will_save):
     try:
         hwdata = json.loads(data)
+        conv = create_converter(chartype)
+        in_len = conv.num_in * conv.seq_len 
         meta = hwdata["meta"]
         model = HWData()
         model.width = meta["size"][0]
@@ -24,13 +25,13 @@ def service_post_hwdata(request, chartype, data, will_save):
         model.strokes = json.dumps(hwdata["strokes"])
         if will_save:
             model.save()
-        simple_hwdata = convert_strokes_simply(model)
+        simple_hwdata = conv.convert_strokes_simply(model)
         ######################################
         ######################################
         ######################################
-        in_x = convert_strokes_to_16signals(simple_hwdata)
-        if len(in_x) < NUMINS:
-            in_x.extend([0] * (NUMINS-len(in_x)))
+        in_x = conv.encode_strokes(simple_hwdata)
+        if len(in_x) < in_len:
+            in_x.extend([0] * (in_len-len(in_x)))
         try:
             ys = service_infer(chartype, in_x)
         except:
@@ -43,6 +44,7 @@ def service_post_hwdata(request, chartype, data, will_save):
                       "ys": ys
                       }
     except Exception, e:
+        logging.error(repr(e))
         return False, repr(e)
 
 ###########

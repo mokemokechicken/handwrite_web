@@ -5,43 +5,44 @@ Created on 2012/11/22
 @author: k_morishita
 '''
 
-from django.test import TestCase
-# from mock import patch
-import web.model_converter as t 
 import math
-from web.models import HWData
 import json
+from django.test import TestCase
 
-class ModelConverterTest(TestCase):
+# from mock import patch
+from web.models import HWData
+from ..simple_n_direction import ConvertSimpleNDirection
+
+class ConvertSimpleNDirectionTest(TestCase):
     def setUp(self):
-        pass
+        self.conv = ConvertSimpleNDirection(8)
     
     def test_calc_distance(self):
-        d = t.calc_distance([10,10], [13, 14], 10, 10)
+        d = self.conv.calc_distance([10,10], [13, 14], 10, 10)
         self.assertEquals(0.5, d)
 
-        d = t.calc_distance([10,10], [13, 14], 10, 10, noise_range=[1.1,1.99])
+        d = self.conv.calc_distance([10,10], [13, 14], 10, 10, noise_range=[1.1,1.99])
         self.assertTrue(0.5 < d < 1.0)
 
     def test_calc_direction(self):
-        d = t.calc_direction([10,10], [15,10], 8)
+        d = self.conv.calc_direction([10,10], [15,10], 8)
         self.assertEquals(0, d)
-        d = t.calc_direction([10,10], [0,10], 8)
+        d = self.conv.calc_direction([10,10], [0,10], 8)
         self.assertEquals(4, d)
-        d = t.calc_direction([0,0], [math.cos(math.radians(22)),math.sin(math.radians(22))], 8)
+        d = self.conv.calc_direction([0,0], [math.cos(math.radians(22)),math.sin(math.radians(22))], 8)
         self.assertEquals(0, d)
-        d = t.calc_direction([0,0], [math.cos(math.radians(-22)),math.sin(math.radians(-22))], 8)
+        d = self.conv.calc_direction([0,0], [math.cos(math.radians(-22)),math.sin(math.radians(-22))], 8)
         self.assertEquals(0, d)
-        d = t.calc_direction([0,0], [math.cos(math.radians(23)),math.sin(math.radians(23))], 8)
+        d = self.conv.calc_direction([0,0], [math.cos(math.radians(23)),math.sin(math.radians(23))], 8)
         self.assertEquals(1, d)
-        d = t.calc_direction([0,0], [math.cos(math.radians(-23)),math.sin(math.radians(-23))], 8)
+        d = self.conv.calc_direction([0,0], [math.cos(math.radians(-23)),math.sin(math.radians(-23))], 8)
         self.assertEquals(7, d)
 
-    def test_convert_strokes_to_16signals(self):
+    def test_encode_strokes(self):
         strokes = []
         strokes.append([[5,5], [8,5], [8,7]])
         strokes.append([[5,7], [5,5]])
-        vectors = t.convert_strokes_to_16signals(self.make_hwdata(strokes), 8)
+        vectors = self.conv.encode_strokes(self.make_hwdata(strokes))
         #
         N=16
         v = vectors[0:N]

@@ -168,10 +168,10 @@ HW.create = function() {
         text += ":"+info["in"]+"-"+info["hiddens"].join("-")+"-"+info["out"];
         context2d.fillText(text, 10, view.canvas.height()-36);
         if (info.score >= 0) {
-            context2d.fillText("最新Error率: " + (info.score)*100 + "%", 10, view.canvas.height()-24);
+            context2d.fillText("最新Error率: " + (info.score)*100 + "%", 10, view.canvas.height()-20);
         }
         var t = info.created_at.split(".")[0];
-        context2d.fillText("created at " + t, 10, view.canvas.height()-12);
+        context2d.fillText("created at " + t, 10, view.canvas.height()-8);
     }
     
     var selectCharRandom = function() {

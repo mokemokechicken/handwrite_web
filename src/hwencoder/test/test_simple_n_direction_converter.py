@@ -5,7 +5,8 @@ Created on 2012/11/22
 @author: k_morishita
 '''
 
-import math
+from __future__ import absolute_import
+
 import json
 from django.test import TestCase
 
@@ -17,27 +18,6 @@ class ConvertSimpleNDirectionTest(TestCase):
     def setUp(self):
         self.conv = ConvertSimpleNDirection(8)
     
-    def test_calc_distance(self):
-        d = self.conv.calc_distance([10,10], [13, 14], 10, 10)
-        self.assertEquals(0.5, d)
-
-        d = self.conv.calc_distance([10,10], [13, 14], 10, 10, noise_range=[1.1,1.99])
-        self.assertTrue(0.5 < d < 1.0)
-
-    def test_calc_direction(self):
-        d = self.conv.calc_direction([10,10], [15,10], 8)
-        self.assertEquals(0, d)
-        d = self.conv.calc_direction([10,10], [0,10], 8)
-        self.assertEquals(4, d)
-        d = self.conv.calc_direction([0,0], [math.cos(math.radians(22)),math.sin(math.radians(22))], 8)
-        self.assertEquals(0, d)
-        d = self.conv.calc_direction([0,0], [math.cos(math.radians(-22)),math.sin(math.radians(-22))], 8)
-        self.assertEquals(0, d)
-        d = self.conv.calc_direction([0,0], [math.cos(math.radians(23)),math.sin(math.radians(23))], 8)
-        self.assertEquals(1, d)
-        d = self.conv.calc_direction([0,0], [math.cos(math.radians(-23)),math.sin(math.radians(-23))], 8)
-        self.assertEquals(7, d)
-
     def test_encode_strokes(self):
         strokes = []
         strokes.append([[5,5], [8,5], [8,7]])

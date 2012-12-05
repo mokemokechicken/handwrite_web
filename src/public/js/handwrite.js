@@ -10,6 +10,7 @@ HW.create = function() {
     var repository;
     var view = {};
     var endpoint = {};
+    var versionInfo = false;
     
     that.setup = function(options) {
         view.canvas = $("#" + options.canvas);
@@ -39,7 +40,13 @@ HW.create = function() {
         });
         // Repository
         repository = HW.repository.create(endpoint);
-        
+        repository.version(function(response){
+            console.log(response);
+            if (response.typename) {
+                versionInfo = response;
+                drawVersion(versionInfo);
+            }
+        });
         return that;
     }
 
@@ -148,7 +155,23 @@ HW.create = function() {
             context2d.fillText(info.char, 0, 50);
             model.char = info.char;
         }
+        if (versionInfo) {
+            drawVersion(versionInfo);
+        }
         return that;
+    }
+    
+    var drawVersion = function(info) {
+        context2d.fillStyle = "blue";
+        context2d.font = "12px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'";
+        var text = "ID"+info["id"]+"["+info["nntype"]+"]";
+        text += ":"+info["in"]+"-"+info["hiddens"].join("-")+"-"+info["out"];
+        context2d.fillText(text, 10, view.canvas.height()-36);
+        if (info.score >= 0) {
+            context2d.fillText("最新Error率: " + (info.score)*100 + "%", 10, view.canvas.height()-24);
+        }
+        var t = info.created_at.split(".")[0];
+        context2d.fillText("created at " + t, 10, view.canvas.height()-12);
     }
     
     var selectCharRandom = function() {
@@ -204,7 +227,7 @@ HW.model.create = function() {
     return that;
 }
 
-// Repository
+// Repository (という名前ではなく API とかそういう名前にすればよかったな・・)
 HW.repository = {};
 HW.repository.create = function(endpoint) {
     var that = {};
@@ -230,6 +253,13 @@ HW.repository.create = function(endpoint) {
         }
     }
     
+    that.version = function(callback) {
+        $.get(endpoint.server + "version", function(response){
+            if (callback) {
+                callback(response);
+            }
+        });
+    }
     
     return that;
 }

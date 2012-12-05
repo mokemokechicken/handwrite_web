@@ -45,11 +45,12 @@ def service_post_hwdata(request, chartype, data, will_save):
     except Exception, e:
         return False, repr(e)
 
+###########
 from interface import Infer
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
-def service_infer(chartype, xs):
+def make_infer_client(chartype):
     host, port = get_host_port(chartype)
     # Make socket
     transport = TSocket.TSocket(host, port)
@@ -65,5 +66,13 @@ def service_infer(chartype, xs):
     
     # Connect!
     transport.open()
+    return client
     
+def service_infer(chartype, xs):
+    client = make_infer_client(chartype)
     return client.infer(xs)
+
+def service_infer_version(chartype):
+    client = make_infer_client(chartype)
+    return json.loads(client.version())
+    

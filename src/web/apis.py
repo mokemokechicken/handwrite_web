@@ -7,7 +7,7 @@ Created on 2012/11/22
 
 
 from prjlib.django.view import json_response
-from web.services import service_post_hwdata
+from web.services import service_post_hwdata, service_infer_version
 from django.views.decorators.csrf import csrf_view_exempt
 
 
@@ -27,3 +27,7 @@ def api_hwdata(request, chartype):
     else:
         return json_response({"error": response})
 
+@csrf_view_exempt
+def api_version(request, chartype):
+    ret = service_infer_version(chartype)
+    return json_response(ret)

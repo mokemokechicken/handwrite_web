@@ -9,7 +9,7 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 from .views import page_index, page_training, page_top
-from .apis import api_hwdata
+from .apis import api_hwdata, api_version
 
 
 
@@ -22,5 +22,6 @@ urlpatterns = patterns('',
     
     # API
     url(r'(?P<chartype>[^./]+)/api/hwdata', api_hwdata),
+    url(r'(?P<chartype>[^./]+)/api/version', api_version),
     url(r'api/hwdata', api_hwdata, {"chartype": default_chartype}),
 )

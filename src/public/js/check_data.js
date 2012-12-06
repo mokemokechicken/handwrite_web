@@ -126,7 +126,7 @@ HW.CheckData.API.create = function(endpoint) {
                 id: data_id,
                 result: is_ok ? "ok" : "ng"
             };
-        $.post(endpoint.server + "checked", params, function(response) {
+        $.post(endpoint.server + "checked?p="+Math.random(), params, function(response) {
             if (callback) {
                 callback(response);
             }

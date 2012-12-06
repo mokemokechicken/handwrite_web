@@ -2,14 +2,14 @@
 
 from __future__ import absolute_import
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
-from .views import page_index, page_training, page_top
-from .apis import api_hwdata, api_version
+from .views import page_index, page_training, page_top, page_check_data
+from .apis import api_hwdata, api_version, api_check_data, api_checked
 
 
 
@@ -17,11 +17,14 @@ default_chartype = "numbers"
 
 urlpatterns = patterns('',
     url(r'^(?P<chartype>[^./]+)/training$', page_training),
+    url(r'^(?P<chartype>[^./]+)/check_data$', page_check_data),
     url(r'^(?P<chartype>[^./]+)/$', page_index),
     url(r'^$', page_top),
     
     # API
     url(r'(?P<chartype>[^./]+)/api/hwdata', api_hwdata),
+    url(r'(?P<chartype>[^./]+)/api/check_data', api_check_data),
+    url(r'(?P<chartype>[^./]+)/api/checked', api_checked),
     url(r'(?P<chartype>[^./]+)/api/version', api_version),
     url(r'api/hwdata', api_hwdata, {"chartype": default_chartype}),
 )

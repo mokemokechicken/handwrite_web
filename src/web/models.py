@@ -8,6 +8,9 @@ class HWData(models.Model):
     height = models.IntegerField()
     strokes = models.TextField()
     validated = models.BooleanField(default=False)
+    is_use = models.BooleanField(default=True)
+    fb_ok = models.IntegerField(default=0)
+    fb_ng = models.IntegerField(default=0)
     create_datetime = models.DateTimeField(auto_now_add=True)
     update_datetime = models.DateTimeField(auto_now=True)
 

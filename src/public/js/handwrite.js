@@ -23,7 +23,6 @@ HW.create = function() {
         // Init Options
         that.options = options;
         that.options.pw = options.pw || 5;
-        // that.options.chars = options.chars; // || "０１２３４５６７８９".split("");
         // Register EventHandler
         setupCanvas(view.canvas);
         view.btnClear.click(function() {
@@ -122,7 +121,7 @@ HW.create = function() {
     
     var argmax = function(ary) {
         var maxidx = 0;
-        var maxval = -9999999999999999999
+        var maxval = -9999999999999999999;
         for (var i=0; i<ary.length; i++) {
             if (ary[i] > maxval) {
                 maxval = ary[i];

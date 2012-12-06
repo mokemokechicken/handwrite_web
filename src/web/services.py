@@ -77,4 +77,41 @@ def service_infer(chartype, xs):
 def service_infer_version(chartype):
     client = make_infer_client(chartype)
     return json.loads(client.version())
-    
+
+###################################
+
+def service_get_check_data(request, chartype):
+    d_models = HWData.objects.filter(validated=False).order_by("fb_ok", "-fb_ng")[:1]
+    ret = {}
+    if len(d_models) == 1:
+        d_model = d_models[0]
+        ret["id"] = d_model.id
+        ret["char"] = d_model.char
+        ret["width"] = d_model.width
+        ret["height"] = d_model.height
+        ret["strokes"] = json.loads(d_model.strokes)
+    else:
+        ret["status"] = "No Data"
+    return True, ret
+
+def service_data_checked(request, chartype):
+    THRESHOULD = 3
+    if "id" not in request.POST or "result" not in request.POST:
+        return False, "Invalid Request"
+        
+    m_id = request.POST["id"]
+    result = request.POST["result"] == "ok"
+    d_model = HWData.objects.get(id=m_id)
+    if result:
+        d_model.fb_ok += 1
+        if d_model.fb_ok >= THRESHOULD:
+            d_model.validated = True
+            d_model.is_use = True
+    else:
+        d_model.fb_ng += 1
+        if d_model.fb_ng >= THRESHOULD:
+            d_model.validated = True
+            d_model.is_use = False
+    d_model.save()
+    return True, {"fb_ok": d_model.fb_ok, "fb_ng": d_model.fb_ng}
+

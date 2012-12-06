@@ -1,0 +1,37 @@
+{% extends "base.tmpl" %}
+
+{% block title %}データチェックモード{% endblock %}
+
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="{{STATIC_URL}}js/check_data.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div style="width: 300px; margin: auto;">
+    <canvas id="canvas" class="canvas" width="300" height="300"></canvas>
+    <div>
+    <div style="float:left;"> <button id="btnOK" class="button">OK</button> </div>
+    <div style="float:right;"> <button id="btnNG" class="button">NG</button> </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block page_js %}
+<script type="text/javascript">
+var hw;
+$(function() {
+	hw = HW.CheckData.create().setup({
+        canvas: "canvas",
+        chars: "{{chars}}".split(""),
+	    btnNG: "btnNG",
+	    btnOK: "btnOK",
+	    serverUrl: "api/",
+	}).start();
+});
+</script>
+{% endblock %}
+

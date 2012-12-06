@@ -16,3 +16,9 @@ def page_training(request, chartype):
 
 def page_top(request):
     return http_response(request, "web/top.tmpl", {})
+
+def page_check_data(request, chartype):
+    tdict = {}
+    tdict["chars"] = get_chars(chartype)
+    return http_response(request, "web/check_data.tmpl", tdict)
+

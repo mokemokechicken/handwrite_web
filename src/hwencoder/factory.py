@@ -8,10 +8,13 @@ from __future__ import absolute_import
 
 from handwrite_web.data_config import get_encoder_type
 from .simple_n_direction import ConvertSimpleNDirection
+from hwencoder.split_n_direction import ConvertSplitNDirection
 
 def create_converter(chartype):
-    enc_type = get_encoder_type(chartype)
+    enc_type, params = get_encoder_type(chartype)
     if enc_type == "SimpleNDirection":
-        return ConvertSimpleNDirection(8)
+        return ConvertSimpleNDirection(**params)
+    elif enc_type == "SplitNDirection":
+        return ConvertSplitNDirection(**params)
     return ConvertSimpleNDirection(8)
 

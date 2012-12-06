@@ -11,6 +11,7 @@ HW.create = function() {
     var view = {};
     var endpoint = {};
     var versionInfo = false;
+    var imageData = null;
     
     that.setup = function(options) {
         view.canvas = $("#" + options.canvas);
@@ -92,6 +93,8 @@ HW.create = function() {
     
     var drawStrokes = function(strokes, ys) {
         var context = context2d;
+        imageData = context.getImageData(0, 0, view.canvas.width(), view.canvas.height());
+
         context.lineWidth = that.options.pw/2;
         context.strokeStyle = "red";
         context.beginPath();
@@ -158,6 +161,7 @@ HW.create = function() {
         if (versionInfo) {
             drawVersion(versionInfo);
         }
+        imageData = null;
         return that;
     }
     
@@ -180,6 +184,9 @@ HW.create = function() {
     
     var mousedown = function(x, y) {
         model.isDown = true;
+        if (imageData) {
+            context2d.putImageData(imageData, 0, 0);
+        }
         model.beginStroke(x,y);
     }
     
@@ -197,6 +204,9 @@ HW.create = function() {
     
     var mouseup = function() {
         model.isDown = false;
+        repository.infer(model,{
+            size: [view.canvas.width(), view.canvas.height()]
+        }, drawStrokes, false);
     }
 
     return that;

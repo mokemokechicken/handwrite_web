@@ -203,7 +203,7 @@ HW.create = function() {
     
     var mouseup = function() {
         model.isDown = false;
-        imageData = context.getImageData(0, 0, view.canvas.width(), view.canvas.height());
+        imageData = context2d.getImageData(0, 0, view.canvas.width(), view.canvas.height());
         repository.infer(model,{
             size: [view.canvas.width(), view.canvas.height()]
         }, drawStrokes, false);

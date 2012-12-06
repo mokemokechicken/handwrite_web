@@ -92,6 +92,9 @@ HW.create = function() {
     
     
     var drawStrokes = function(strokes, ys) {
+        if (model.isDown) {
+            return;
+        }
         var context = context2d;
 
         context.lineWidth = that.options.pw/2;

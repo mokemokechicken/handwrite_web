@@ -93,7 +93,6 @@ HW.create = function() {
     
     var drawStrokes = function(strokes, ys) {
         var context = context2d;
-        imageData = context.getImageData(0, 0, view.canvas.width(), view.canvas.height());
 
         context.lineWidth = that.options.pw/2;
         context.strokeStyle = "red";
@@ -204,6 +203,7 @@ HW.create = function() {
     
     var mouseup = function() {
         model.isDown = false;
+        imageData = context.getImageData(0, 0, view.canvas.width(), view.canvas.height());
         repository.infer(model,{
             size: [view.canvas.width(), view.canvas.height()]
         }, drawStrokes, false);

@@ -69,6 +69,8 @@ HW.CheckData.create = function() {
         context2d.fillStyle = "black";
         context2d.font = "50px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
         context2d.fillText(char, 0, 50);
+        context2d.font = "15px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
+        context2d.fillText("id="+model.id, 0, canvas_height-20);
         // draw strokes
         context2d.lineWidth = that.options.pw/2;
         context2d.strokeStyle = "black";

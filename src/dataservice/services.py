@@ -13,7 +13,7 @@ from handwrite_web.data_config import get_chars
 from hwencoder.factory import create_converter
 
 def get_hwdataset(char_map):
-    return HWData.objects.filter(char__in = char_map.keys())
+    return HWData.objects.filter(char__in=char_map.keys(), is_use=True)
 
 def dataset_service(request, chartype):
     noise_range = request.GET.get("noise_range")

@@ -34,10 +34,10 @@ d8["encoder_params"] = {"n_direction": 8}
 d8["port"] = 9997
 DATA_CONFIG["num_hira-d8"] = d8
 
-d2 = copy.copy(d8)
-d2["encoder_params"] = {"n_direction": 2}
-d2["port"] = 9996
-DATA_CONFIG["num_hira-d2"] = d2
+d4 = copy.copy(d8)
+d4["encoder_params"] = {"n_direction": 4}
+d4["port"] = 9996
+DATA_CONFIG["num_hira-d4"] = d4
 
 def get_chars(charset_type):
     return DATA_CONFIG[charset_type]["chars"]

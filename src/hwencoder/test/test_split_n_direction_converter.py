@@ -11,6 +11,7 @@ import json
 from django.test import TestCase
 
 # from mock import patch
+
 from web.models import HWData
 from ..split_n_direction import ConvertSplitNDirection
 import math
@@ -69,7 +70,7 @@ class ConvertSplitNDirectionTest(TestCase):
         v = vectors[N*3:N*4] # 0, -0.2
         self.assertEquals(0.2, v[3])
         self.assertAlmostEquals(0.2, sum(v), delta=0.00001)
-        print vectors
+
 
     def make_hwdata(self, strokes, w=10, h=10):
         return HWData(width=w, height=w, char="x", strokes=json.dumps(strokes))

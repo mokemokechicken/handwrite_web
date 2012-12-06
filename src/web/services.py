@@ -7,9 +7,10 @@ Created on 2012/11/22
 
 import json
 from web.models import HWData
-from handwrite_web.data_config import get_host_port
+from handwrite_web.data_config import get_host_port, get_chars
 from hwencoder.factory import create_converter
 import logging
+from dataservice.services import get_char_map, get_hwdataset
 
 
 def service_post_hwdata(request, chartype, data, will_save):
@@ -81,7 +82,9 @@ def service_infer_version(chartype):
 ###################################
 
 def service_get_check_data(request, chartype):
-    d_models = HWData.objects.filter(validated=False).order_by("fb_ok", "-fb_ng")[:1]
+    char_map = get_char_map(get_chars(chartype))
+    q = get_hwdataset(char_map)
+    d_models = q.filter(validated=False).order_by("fb_ok", "-fb_ng")[:1]
     ret = {}
     if len(d_models) == 1:
         d_model = d_models[0]

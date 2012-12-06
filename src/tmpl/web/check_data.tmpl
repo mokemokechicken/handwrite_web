@@ -14,6 +14,7 @@
     <canvas id="canvas" class="canvas" width="300" height="300"></canvas>
     <div>
     <div style="float:left;"> <button id="btnOK" class="button">OK</button> </div>
+    <div style="float:left;"> <button id="btnInfer" class="button">Guess</button> </div>
     <div style="float:right;"> <button id="btnNG" class="button">NG</button> </div>
     </div>
 </div>
@@ -29,6 +30,7 @@ $(function() {
         chars: "{{chars}}".split(""),
 	    btnNG: "btnNG",
 	    btnOK: "btnOK",
+	    btnInfer: "btnInfer",
 	    serverUrl: "api/",
 	}).start();
 });

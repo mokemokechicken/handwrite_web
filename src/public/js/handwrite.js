@@ -2,6 +2,33 @@ jQuery.ajaxSetup({ cache: false });
 
 var HW = {};
 
+HW.Util = HW.Util || {};
+HW.Util.argmax = function(ary) {
+    var maxidx = 0;
+    var maxval = -9999999999999999999;
+    for (var i=0; i<ary.length; i++) {
+        if (ary[i] > maxval) {
+            maxval = ary[i];
+            maxidx = i;
+        }
+    }
+    return maxidx;
+}
+
+HW.Util.valueOrder = function(ary) {
+    // 配列の要素値の大きい順の 配列Index値をArrayで返す
+    var tmp = [];
+    for (var i=0; i<ary.length; i++) {
+        tmp.push([ary[i], i]);
+    }
+    var sorted = $(tmp).sort(function(a,b) {return b[0]-a[0];});
+    var ret = [];
+    for (var i=0; i<sorted.length; i++) {
+        ret.push(sorted[i][1]);
+    }
+    return ret;
+}
+
 // Controller
 HW.create = function() {
     var that = {};
@@ -91,9 +118,6 @@ HW.create = function() {
     
     
     var drawStrokes = function(strokes, ys) {
-        if (model.isDown) {
-            return;
-        }
         var context = context2d;
 
         context.lineWidth = that.options.pw/2;
@@ -106,7 +130,7 @@ HW.create = function() {
             })
         });
         context.lineWidth = 2;
-        var predOrder = valueOrder(ys);
+        var predOrder = HW.Util.valueOrder(ys);
         for (var i=0; i<6; i++) {
             context.font = "50px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
             context.fillStyle = "black";
@@ -117,31 +141,6 @@ HW.create = function() {
             context.fillText(p + "%" , view.canvas.width()-30, i*50+50);
         }
         context.stroke();
-    }
-    
-    var argmax = function(ary) {
-        var maxidx = 0;
-        var maxval = -9999999999999999999;
-        for (var i=0; i<ary.length; i++) {
-            if (ary[i] > maxval) {
-                maxval = ary[i];
-                maxidx = i;
-            }
-        }
-        return maxidx;
-    }
-    
-    var valueOrder = function(ary) {
-        var tmp = [];
-        for (var i=0; i<ary.length; i++) {
-            tmp.push([ary[i], i]);
-        }
-        var sorted = $(tmp).sort(function(a,b) {return b[0]-a[0];});
-        var ret = [];
-        for (var i=0; i<sorted.length; i++) {
-            ret.push(sorted[i][1]);
-        }
-        return ret;
     }
     
     that.start = function(info) {

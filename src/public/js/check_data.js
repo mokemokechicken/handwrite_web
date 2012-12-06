@@ -12,6 +12,7 @@ HW.CheckData.create = function() {
         view = {},
         endpoint = {},
         api,
+        infer_api,
         context2d,
         canvas_width, canvas_height,
         model = {};
@@ -21,10 +22,18 @@ HW.CheckData.create = function() {
         view.canvas = $("#" + options.canvas);
         view.btnNG = $("#" + options.btnNG);
         view.btnOK = $("#" + options.btnOK);
+        view.btnInfer = $("#" + options.btnInfer);
         endpoint.server = options.serverUrl;
         // Init Options
         that.options = options;
         that.options.pw = options.pw || 5;
+        // Initialize
+        api = HW.CheckData.API.create(endpoint);
+        context2d = view.canvas[0].getContext("2d");
+        canvas_width = view.canvas.width();
+        canvas_height = view.canvas.height();
+        //
+        infer_api = HW.repository.create(endpoint);
         // Register Events
         view.btnNG.click(function() {
             api.feedback(model.id, false, afterFeedback);
@@ -32,12 +41,11 @@ HW.CheckData.create = function() {
         view.btnOK.click(function() {
             api.feedback(model.id, true, afterFeedback);
         })
-        
-        //
-        api = HW.CheckData.API.create(endpoint);
-        context2d = view.canvas[0].getContext("2d");
-        canvas_width = view.canvas.width();
-        canvas_height = view.canvas.height();
+        view.btnInfer.click(function() {
+            infer_api.infer(model,{
+                size: [canvas_width, canvas_height]
+            }, showInferResult, false);
+        });
         return that;
     }
     
@@ -51,9 +59,11 @@ HW.CheckData.create = function() {
     }
     
     var drawStrokes = function(response) {
-        model.id = response.id;
         var strokes = response.strokes;
         var char = response.char;
+        model.id = response.id;
+        model.char = char;
+        model.strokes = strokes;
         // draw char
         context2d.lineWidth = 2;
         context2d.fillStyle = "black";
@@ -62,17 +72,6 @@ HW.CheckData.create = function() {
         // draw strokes
         context2d.lineWidth = that.options.pw/2;
         context2d.strokeStyle = "black";
-//        context2d.beginPath();
-//        $.each(strokes, function(i, stroke) {
-//            context2d.beginPath();
-//            context2d.moveTo(stroke[0][0], stroke[0][1]);
-//            $.each(stroke.slice(1), function(j, p) {
-//                context2d.lineTo(p[0], p[1]);
-//            })
-//            context2d.stroke();
-//        });
-//        context2d.stroke();
-//        timerLoop(500, strokes, 0, drawing);
         drawing(strokes);
     }
     
@@ -93,12 +92,25 @@ HW.CheckData.create = function() {
         var stroke = strokes[0];
         context2d.beginPath();
         context2d.moveTo(stroke[0][0], stroke[0][1]);
-        timerLoop(10, stroke, 1, function(j, p) {
+        timerLoop(3, stroke, 1, function(j, p) {
             context2d.lineTo(p[0], p[1]);
             context2d.stroke();
         }, function() {
-            setTimeout(drawing(strokes.slice(1)), 500);
+            setTimeout(drawing(strokes.slice(1)), 400);
         });
+    }
+    
+    var showInferResult = function(strokes, ys) {
+        var predOrder = HW.Util.valueOrder(ys);
+        for (var i=0; i<6; i++) {
+            context2d.font = "50px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'"
+            context2d.fillStyle = "black";
+            context2d.fillText(that.options.chars[predOrder[i]], view.canvas.width()-70, 50 + i*50);
+            context2d.font = "10px 'メイリオ', 'MS P明朝', 'ヒラギノ明朝 Pro'";
+            context2d.fillStyle = "red";
+            var p = Math.floor(ys[predOrder[i]] * 1000) / 10;
+            context2d.fillText(p + "%" , view.canvas.width()-30, i*50+50);
+        }
     }
     return that;
 }

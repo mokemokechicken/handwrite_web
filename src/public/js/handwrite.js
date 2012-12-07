@@ -206,9 +206,11 @@ HW.create = function() {
         context2d.fillText("created at " + t, 10, view.canvas.height()-8);
     }
     
+    var drawingId = 0;
     var mousedown = function(x, y) {
         model.isDown = true;
         if (imageData) {
+            drawingId += 1;
             context2d.putImageData(imageData, 0, 0);
         }
         model.beginStroke(x,y);
@@ -228,10 +230,15 @@ HW.create = function() {
     
     var mouseup = function() {
         model.isDown = false;
+        var curDrawingId = drawingId;
         imageData = context2d.getImageData(0, 0, view.canvas.width(), view.canvas.height());
         repository.infer(model,{
             size: [view.canvas.width(), view.canvas.height()]
-        }, drawStrokes, false);
+        }, function(strokes, ys) {
+            if (curDrawingId == drawingId) {
+                drawStrokes(strokes, ys);
+            }
+        }, false);
     }
 
     return that;

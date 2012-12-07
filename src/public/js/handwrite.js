@@ -39,6 +39,7 @@ HW.create = function() {
     var endpoint = {};
     var versionInfo = false;
     var imageData = null;
+    var charCount = null;
     
     that.setup = function(options) {
         view.canvas = $("#" + options.canvas);
@@ -68,13 +69,37 @@ HW.create = function() {
         // Repository
         repository = HW.repository.create(endpoint);
         repository.version(function(response){
-            console.log(response);
             if (response.typename) {
                 versionInfo = response;
                 drawVersion(versionInfo);
             }
         });
+        repository.char_weight(function(response){
+            charCount = response.charCount;
+        });
         return that;
+    }
+
+    var getRandomChar = function() {
+        return that.options.chars[Math.floor(Math.random()*that.options.chars.length)];
+    }
+    
+    var selectCharRandom = function() {
+        if (!charCount) {
+            return getRandomChar();
+        } else {
+            var ch, ct = 999999999999999, c;
+            for (var i=0; i<10; i++) {
+                c = getRandomChar();
+                if (!charCount[c]) {charCount[c]=0;} 
+                if (charCount[c] < ct) {
+                    ch = c;
+                    ct = charCount[c];
+                }
+            }
+            charCount[ch] += 1;
+            return ch;
+        }
     }
 
     var setupCanvas = function(canvas) {
@@ -178,10 +203,6 @@ HW.create = function() {
         context2d.fillText("created at " + t, 10, view.canvas.height()-8);
     }
     
-    var selectCharRandom = function() {
-        return that.options.chars[Math.floor(Math.random()*that.options.chars.length)];
-    }
-    
     var mousedown = function(x, y) {
         model.isDown = true;
         if (imageData) {
@@ -272,6 +293,13 @@ HW.repository.create = function(endpoint) {
         });
     }
     
+    that.char_weight = function(callback) {
+        $.get(endpoint.server + "char_weight", function(response){
+            if (callback) {
+                callback(response);
+            }
+        })
+    }
     return that;
 }
 

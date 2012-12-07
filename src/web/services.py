@@ -11,6 +11,7 @@ from handwrite_web.data_config import get_host_port, get_chars
 from hwencoder.factory import create_converter
 import logging
 from dataservice.services import get_char_map, get_hwdataset
+from django.db import models
 
 
 def service_post_hwdata(request, chartype, data, will_save):
@@ -117,4 +118,15 @@ def service_data_checked(request, chartype):
             d_model.is_use = False
     d_model.save()
     return True, {"fb_ok": d_model.fb_ok, "fb_ng": d_model.fb_ng}
+
+def service_char_weight(request, chartype):
+    char_map = get_char_map(get_chars(chartype))
+    q = get_hwdataset(char_map).annotate(cnt=models.Count("id"))
+    char_count = {}
+    for model in q:
+        char_count[model.char] = model.cnt
+    return True, {"charCount": char_count}
+
+    
+    
 

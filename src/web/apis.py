@@ -8,7 +8,7 @@ Created on 2012/11/22
 
 from prjlib.django.view import json_response
 from web.services import service_post_hwdata, service_infer_version,\
-    service_get_check_data, service_data_checked
+    service_get_check_data, service_data_checked, service_char_weight
 from django.views.decorators.csrf import csrf_view_exempt
 from django.http import HttpResponseBadRequest
 
@@ -29,12 +29,10 @@ def api_hwdata(request, chartype):
     else:
         return json_response({"error": response})
 
-@csrf_view_exempt
 def api_version(request, chartype):
     ret = service_infer_version(chartype)
     return json_response(ret)
 
-@csrf_view_exempt
 def api_check_data(request, chartype):
     success, response = service_get_check_data(request, chartype)
     if success:
@@ -50,3 +48,11 @@ def api_checked(request, chartype):
     else:
         return HttpResponseBadRequest(response)
 
+
+def api_char_weight(request, chartype):
+    success, response = service_char_weight(request, chartype)
+    if success:
+        return json_response(response)
+    else:
+        return HttpResponseBadRequest(response)
+    

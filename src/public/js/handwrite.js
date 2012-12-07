@@ -59,7 +59,10 @@ HW.create = function() {
         view.btnSave.click(function() {
             repository.infer(model,{
                 size: [view.canvas.width(), view.canvas.height()]
-            }, drawStrokes, true);
+            }, function(x) {
+                // drawStrokes(x);
+                that.start();
+            }, true);
         });
         view.btnInfer.click(function() {
             repository.infer(model,{
@@ -89,7 +92,7 @@ HW.create = function() {
             return getRandomChar();
         } else {
             var ch, ct = 999999999999999, c;
-            for (var i=0; i<10; i++) {
+            for (var i=0; i<20; i++) {
                 c = getRandomChar();
                 if (!charCount[c]) {charCount[c]=0;} 
                 if (charCount[c] < ct) {

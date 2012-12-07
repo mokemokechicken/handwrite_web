@@ -121,10 +121,11 @@ def service_data_checked(request, chartype):
 
 def service_char_weight(request, chartype):
     char_map = get_char_map(get_chars(chartype))
-    q = get_hwdataset(char_map).annotate(cnt=models.Count("id"))
+    q = get_hwdataset(char_map).values("char").annotate(cnt=models.Count("char"))
     char_count = {}
+    print q.query
     for model in q:
-        char_count[model.char] = model.cnt
+        char_count[model["char"]] = model["cnt"]
     return True, {"charCount": char_count}
 
     

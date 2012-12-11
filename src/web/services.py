@@ -15,7 +15,7 @@ from django.db import models
 import traceback
 
 
-def service_post_hwdata(request, chartype, data, will_save):
+def service_post_hwdata(request, chartype, data):
     try:
         hwdata = json.loads(data)
         conv = create_converter(chartype)
@@ -26,7 +26,7 @@ def service_post_hwdata(request, chartype, data, will_save):
         model.height = meta["size"][1]
         model.char = hwdata["char"]
         model.strokes = json.dumps(hwdata["strokes"])
-        if will_save:
+        if hwdata.get("save") == "true":
             model.save()
         simple_hwdata = conv.convert_strokes_simply(model)
         ######################################
@@ -129,6 +129,29 @@ def service_char_weight(request, chartype):
         char_count[model["char"]] = model["cnt"]
     return True, {"charCount": char_count}
 
+def service_find_error(request, chartype):
+    since_id = int(request.GET.get("since", 0))
+    hwdata, ys, message = find_error_in_dataset(chartype, since_id)
     
     
+
+def find_error_in_dataset(chartype, since_id):
+    char_map = get_char_map(get_chars(chartype))
+    q = get_hwdataset(char_map).filter(id__gt__=since_id)
+    conv = create_converter(chartype)
+    in_len = conv.num_in * conv.seq_len 
+    for hwdata in q:
+        simple_hwdata = conv.convert_strokes_simply(hwdata)
+        in_x = conv.encode_strokes(simple_hwdata)
+        if len(in_x) < in_len:
+            in_x.extend([0] * (in_len-len(in_x)))
+        try:
+            ys = service_infer(chartype, in_x)
+        except Exception, e:
+            return hwdata, None, str(e)
+        argmax = ys.index(max(ys))
+        if char_map[hwdata.char] != argmax:
+            return hwdata, ys, "Incorrect"
+    
+    return None, None, "No Error"
 

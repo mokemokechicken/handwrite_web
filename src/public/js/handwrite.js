@@ -278,7 +278,8 @@ HW.repository.create = function(endpoint) {
         data = {
                 meta: meta,
                 char: model.char,
-                strokes: model.strokes
+                strokes: model.strokes,
+                save: isSave ? "true" : "false"
         };
 
         var params = JSON.stringify(data);
@@ -287,12 +288,7 @@ HW.repository.create = function(endpoint) {
                 callback(response.strokes, response.ys);
             }
         }
-        if (isSave) {
-            $.post(endpoint.server + "hwdata", params, responseHandler);
-        } else {
-            params = "json=" + params;
-            $.get(endpoint.server + "hwdata", params, responseHandler);
-        }
+        $.post(endpoint.server + "hwdata", params, responseHandler);
     }
     
     that.version = function(callback) {

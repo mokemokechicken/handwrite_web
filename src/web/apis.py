@@ -8,22 +8,19 @@ Created on 2012/11/22
 
 from prjlib.django.view import json_response
 from web.services import service_post_hwdata, service_infer_version,\
-    service_get_check_data, service_data_checked, service_char_weight
+    service_get_check_data, service_data_checked, service_char_weight,\
+    service_find_error
 from django.views.decorators.csrf import csrf_view_exempt
 from django.http import HttpResponseBadRequest
 
 
 @csrf_view_exempt
 def api_hwdata(request, chartype):
-    if request.method not in ("POST", "GET"):
+    if request.method not in ("POST",):
         return json_response({"message": "HTTP Method Error"})
-    if request.method == "POST":
-        will_save = True
-        data = request.raw_post_data
-    else:
-        will_save = False
-        data = request.GET["json"]
-    success, response = service_post_hwdata(request, chartype, data, will_save)
+
+    data = request.raw_post_data
+    success, response = service_post_hwdata(request, chartype, data)
     if success:
         return json_response(response)
     else:
@@ -51,6 +48,13 @@ def api_checked(request, chartype):
 
 def api_char_weight(request, chartype):
     success, response = service_char_weight(request, chartype)
+    if success:
+        return json_response(response)
+    else:
+        return HttpResponseBadRequest(response)
+
+def api_find_error(request, chartype):
+    success, response = service_find_error(request, chartype)
     if success:
         return json_response(response)
     else:

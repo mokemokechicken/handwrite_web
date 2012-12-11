@@ -132,12 +132,18 @@ def service_char_weight(request, chartype):
 def service_find_error(request, chartype):
     since_id = int(request.GET.get("since", 0))
     hwdata, ys, message = find_error_in_dataset(chartype, since_id)
-    
-    
+    if hwdata is None:
+        return True, {"message": message}
+    return True, {"message": message, 
+                  "ys": ys,
+                  "id": hwdata.id, 
+                  "char": hwdata.char,
+                  "strokes": json.loads(hwdata.strokes),
+                  }
 
 def find_error_in_dataset(chartype, since_id):
     char_map = get_char_map(get_chars(chartype))
-    q = get_hwdataset(char_map).filter(id__gt__=since_id)
+    q = get_hwdataset(char_map).filter(id__gt=since_id)
     conv = create_converter(chartype)
     in_len = conv.num_in * conv.seq_len 
     for hwdata in q:

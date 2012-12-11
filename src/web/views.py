@@ -22,3 +22,7 @@ def page_check_data(request, chartype):
     tdict["chars"] = get_chars(chartype)
     return http_response(request, "web/check_data.tmpl", tdict)
 
+def page_find_error(request, chartype):
+    tdict = {}
+    tdict["chars"] = get_chars(chartype)
+    return http_response(request, "web/find_error.tmpl", tdict)

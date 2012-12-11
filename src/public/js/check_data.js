@@ -15,7 +15,9 @@ HW.CheckData.create = function() {
         infer_api,
         context2d,
         canvas_width, canvas_height,
-        model = {};
+        model = {},
+        sinceId = 0
+        ;
         
     
     that.setup = function(options) {
@@ -23,6 +25,7 @@ HW.CheckData.create = function() {
         view.btnNG = $("#" + options.btnNG);
         view.btnOK = $("#" + options.btnOK);
         view.btnInfer = $("#" + options.btnInfer);
+        view.btnNext = $("#" + options.btnNext);
         endpoint.server = options.serverUrl;
         // Init Options
         that.options = options;
@@ -46,6 +49,10 @@ HW.CheckData.create = function() {
                 size: [canvas_width, canvas_height]
             }, showInferResult, false);
         });
+        // Find Error Mode
+        view.btnNext.click(function() {
+            find_error_next();
+        });
         return that;
     }
     
@@ -56,6 +63,19 @@ HW.CheckData.create = function() {
     that.start = function() {
         context2d.clearRect(0, 0, canvas_width, canvas_height);
         api.fetch(drawStrokes);
+    }
+    
+    that.start_find_error = function() {
+        find_error_next();
+    }
+    
+    var find_error_next = function() {
+        context2d.clearRect(0, 0, canvas_width, canvas_height);
+        api.find_error(sinceId, function(response) {
+            sinceId = response.id;
+            drawStrokes(response);
+            showInferResult(response.strokes, response.ys);
+        });
     }
     
     var drawStrokes = function(response) {
@@ -135,6 +155,12 @@ HW.CheckData.API.create = function(endpoint) {
     
     that.fetch = function(callback) {
         $.get(endpoint.server + "check_data", {p: Math.random()},  function(response) {
+            callback(response);
+        });
+    }
+    
+    that.find_error = function(sinceId, callback) {
+        $.get(endpoint.server + "find_error", {since: sinceId}, function(response) {
             callback(response);
         });
     }

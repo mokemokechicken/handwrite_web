@@ -1,0 +1,39 @@
+{% extends "base.tmpl" %}
+
+{% block title %}間違い表示モード{% endblock %}
+
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="{{STATIC_URL}}js/check_data.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div style="width: 300px; margin: auto;">
+    <canvas id="canvas" class="canvas" width="300" height="300"></canvas>
+    <div>
+    <!--
+    <div style="float:left;"> <button id="btnOK" class="button" accesskey="O">OK</button> </div>
+    <div style="float:left;"> <button id="btnInfer" class="button" accesskey="G">Guess</button> </div>
+    -->
+    <div style="float:right;"> <button id="btnNext" class="button" accesskey="N">Next</button> </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block page_js %}
+<script type="text/javascript">
+var hw;
+$(function() {
+	hw = HW.CheckData.create().setup({
+        canvas: "canvas",
+        chars: "{{chars}}".split(""),
+	    btnNext: "btnNext",
+	    serverUrl: "api/",
+	}).start_find_error();
+});
+</script>
+{% endblock %}
+

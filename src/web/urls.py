@@ -8,16 +8,16 @@ from django.conf.urls import patterns, url
 # from django.contrib import admin
 # admin.autodiscover()
 
-from .views import page_index, page_training, page_top, page_check_data
-from .apis import api_hwdata, api_version, api_check_data, api_checked, api_char_weight
+from .views import page_index, page_training, page_top, page_check_data, page_find_error
+from .apis import api_hwdata, api_version, api_check_data, api_checked, api_char_weight, api_find_error
 
 
-
-default_chartype = "numbers"
+default_chartype = "num_hira"
 
 urlpatterns = patterns('',
     url(r'^(?P<chartype>[^./]+)/training$', page_training),
     url(r'^(?P<chartype>[^./]+)/check_data$', page_check_data),
+    url(r'^(?P<chartype>[^./]+)/find_error$', page_find_error),
     url(r'^(?P<chartype>[^./]+)/$', page_index),
     url(r'^$', page_top),
     
@@ -27,5 +27,6 @@ urlpatterns = patterns('',
     url(r'(?P<chartype>[^./]+)/api/checked', api_checked),
     url(r'(?P<chartype>[^./]+)/api/version', api_version),
     url(r'(?P<chartype>[^./]+)/api/char_weight', api_char_weight),
+    url(r'(?P<chartype>[^./]+)/api/find_error', api_find_error),
     url(r'api/hwdata', api_hwdata, {"chartype": default_chartype}),
 )

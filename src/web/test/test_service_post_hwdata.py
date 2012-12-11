@@ -29,9 +29,9 @@ class ServiceHWDataTest(TestCase):
     @patch(relative_package("..services.service_infer", __package__), return_value=[1,1,1])
     def test_service_post_hwdata(self, sinfer_mock, m2):
         req = self.factory.get("/hogehoge/api/hwdata")
-        hwdata = {"meta": {"size": (50,60)}, "char": u"あ", "strokes": [((0,0),(1,1)),((2,2),(3,3))]}
+        hwdata = {"meta": {"size": (50,60)}, "char": u"あ", "strokes": [((0,0),(1,1)),((2,2),(3,3))], "save": "true"}
         data = json.dumps(hwdata)
-        success, ret = service_post_hwdata(req, "hogehoge", data, True)
+        success, ret = service_post_hwdata(req, "hogehoge", data)
         self.assertEquals(True, success)
         self.assertEquals(True, ret["success"])
         self.assertEquals([1,1,1], ret["ys"])
@@ -47,10 +47,10 @@ class ServiceHWDataTest(TestCase):
     @patch(relative_package("..services.service_infer", __package__), return_value=[1,1,1])
     def test_service_get_hwdata(self, sinfer_mock, modelCls, m3):
         req = self.factory.get("/hogehoge/api/hwdata")
-        hwdata = {"meta": {"size": (50,60)}, "char": u"あ", "strokes": [((0,0),(1,1)),((2,2),(3,3))]}
+        hwdata = {"meta": {"size": (50,60)}, "char": u"あ", "strokes": [((0,0),(1,1)),((2,2),(3,3))], "save": "false"}
         data = json.dumps(hwdata)
         #
-        success, ret = service_post_hwdata(req, "hogehoge", data, False)
+        success, ret = service_post_hwdata(req, "hogehoge", data)
         self.assertEquals(True, success)
         self.assertEquals(True, ret["success"])
         self.assertEquals([1,1,1], ret["ys"])

@@ -22,7 +22,8 @@ class ConvertScaleSplitNDirection(ConvertSplitNDirection):
                 max_x = max(max_x, point[0])
                 min_y = min(min_y, point[1])
                 max_y = max(max_y, point[1])
-        rate = min(sdata.width*0.7/(max_x - min_x), sdata.height*0.7/(max_y-min_y))
+        ZERO = 0.00000001
+        rate = min(sdata.width*0.7/max(ZERO,(max_x - min_x)), sdata.height*0.7/max(ZERO,(max_y-min_y)))
         sdata.width /= rate
         sdata.height /= rate
         return convert_strokes_simply(sdata, 8, 0.03)

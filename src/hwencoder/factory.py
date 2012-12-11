@@ -9,6 +9,7 @@ from __future__ import absolute_import
 from handwrite_web.data_config import get_encoder_type
 from .simple_n_direction import ConvertSimpleNDirection
 from hwencoder.split_n_direction import ConvertSplitNDirection
+from hwencoder.scale_split_n_direction import ConvertScaleSplitNDirection
 
 def create_converter(chartype):
     enc_type, params = get_encoder_type(chartype)
@@ -16,5 +17,7 @@ def create_converter(chartype):
         return ConvertSimpleNDirection(**params)
     elif enc_type == "SplitNDirection":
         return ConvertSplitNDirection(**params)
+    elif enc_type == "ScaleSplitNDirection":
+        return ConvertScaleSplitNDirection(**params)
     return ConvertSimpleNDirection(8)
 

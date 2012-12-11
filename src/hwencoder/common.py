@@ -9,7 +9,7 @@ import json
 import random
 import math
 
-def convert_strokes_simply(hwdata, n_direction=8, dist_threshold=0.02):
+def convert_strokes_simply(hwdata, n_direction=8, dist_threshold=0.03):
     """
     
     @param hwdata: HWData
@@ -43,7 +43,6 @@ def distance_point_and_line(p1, p2, p, W, H):
     c = -(a*p1[0]/W+b*p1[1]/H)
     d = math.sqrt(a*a+b*b)
     if d == 0:
-        print "EE: %s,%s,%s" % (p1,p2,p)
         return calc_distance(p1, p, W, H)
     return abs(a*p[0]/W+b*p[1]/H+c)/d
 

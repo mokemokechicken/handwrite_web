@@ -29,7 +29,7 @@ DATA_CONFIG = {
 }
 
 d8 = copy.copy(DATA_CONFIG["num_hira"])
-d8["encoder"] = "SplitNDirection"
+d8["encoder"] = "ScaleSplitNDirection"
 d8["encoder_params"] = {"n_direction": 8}
 d8["port"] = 9997
 DATA_CONFIG["num_hira-d8"] = d8

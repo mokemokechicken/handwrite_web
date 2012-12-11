@@ -9,7 +9,7 @@ import json
 import random
 import math
 
-def convert_strokes_simply(hwdata, n_direction=8, dist_threshold=0.05):
+def convert_strokes_simply(hwdata, n_direction=8, dist_threshold=0.02):
     """
     
     @param hwdata: HWData
@@ -19,21 +19,33 @@ def convert_strokes_simply(hwdata, n_direction=8, dist_threshold=0.05):
     new_strokes = []
     for stroke in json.loads(sdata.strokes):
         ns = []
+        mid_points = []
         new_strokes.append(ns)
-        prev_point = None
         for point in stroke:
             if len(ns) == 0:
                 ns.append(point)
-            elif calc_distance(ns[-1], point, sdata.width, sdata.height) >= dist_threshold:
-                prev_direction = calc_direction(ns[-1], point, n_direction)
-                direction = calc_direction(prev_point, point, n_direction)
-                if direction != prev_direction:
-                    ns.append(prev_point)
-            prev_point = point
-        if calc_distance(ns[-1], prev_point, sdata.width, sdata.height) >= dist_threshold:
-            ns.append(prev_point)
+            else:
+                for mp in mid_points:
+                    d = distance_point_and_line(ns[-1], point, mp, sdata.width, sdata.height)
+                    if d > dist_threshold:
+                        ns.append(mid_points[-1])
+                        mid_points = []
+                        break
+            mid_points.append(point)
+        if calc_distance(ns[-1], mid_points[-1], sdata.width, sdata.height) >= dist_threshold:
+            ns.append(mid_points[-1])
     sdata.strokes = json.dumps(new_strokes)
     return sdata
+
+def distance_point_and_line(p1, p2, p, W, H):
+    """p1, p2 を結ぶ直線と点p との距離を求める。p1,p2は(x,y)なTuple"""
+    a,b = (-1.0*(p2[1]-p1[1])/W, 1.0*(p2[0]-p1[0])/H)
+    c = -(a*p1[0]/W+b*p1[1]/H)
+    d = math.sqrt(a*a+b*b)
+    if d == 0:
+        print "EE: %s,%s,%s" % (p1,p2,p)
+        return calc_distance(p1, p, W, H)
+    return abs(a*p[0]/W+b*p[1]/H+c)/d
 
 def calc_direction(prev_point, point, n_direction, noise_range=None):
     noise_x = noise_y = 1

@@ -44,5 +44,5 @@ class ConvertSimpleNDirection(object):
         @param hwdata: HWData
         @return Simplified HWData Model 
         """
-        return convert_strokes_simply(hwdata, 8, 0.05)
+        return convert_strokes_simply(hwdata, 8, 0.02)
 

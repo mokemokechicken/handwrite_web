@@ -12,6 +12,7 @@ from hwencoder.factory import create_converter
 import logging
 from dataservice.services import get_char_map, get_hwdataset
 from django.db import models
+import traceback
 
 
 def service_post_hwdata(request, chartype, data, will_save):
@@ -47,6 +48,7 @@ def service_post_hwdata(request, chartype, data, will_save):
                       }
     except Exception, e:
         logging.error(repr(e))
+        logging.error(traceback.format_exc())
         return False, repr(e)
 
 ###########

@@ -14,7 +14,7 @@
         "infer_server_port": 9996,
         "data_server_url": "http://54.248.76.99:7777/data/api",
         "encoder": "ScaleSplitNDirection",
-        "encoder_params": {"n_direction": 8}
+        "encoder_params": {"n_direction": 4}
     }
 
 }

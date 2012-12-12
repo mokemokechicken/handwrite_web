@@ -11,6 +11,7 @@ import json
 class ConfigClient(object):
     def __init__(self, endpoint):
         self.endpoint = endpoint
+        self.timeout = 60
     
     def _fetch_data(self, name, params=None):
         """

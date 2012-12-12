@@ -4,49 +4,34 @@ Created on 2012/11/30
 
 @author: k_morishita
 '''
+
+from __future__ import absolute_import
+
 import copy
+import time
+from configservice.client.client import ConfigClient
 
-DATA_CONFIG = {
-    "numbers": {
-        "chars": u"０１２３４５６７８９",
-        # infer server endpoint
-        "host": "localhost",
-        "port": 9999,
-        # stroke data encoding
-        "encoder": "SimpleNDirection",
-        "encoder_params": {"n_direction": 8},
-    },
-    "num_hira": {
-        "chars": u"０１２３４５６７８９あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねの" +
-                 u"はひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん",
-        # infer server endpoint
-        "host": "localhost",
-        "port": 9998,
-        # stroke data encoding
-        "encoder": "SimpleNDirection",
-        "encoder_params": {"n_direction": 8},
-    }
-}
+CONFIG_SERVER_URL = "http://localhost:8000/config"
 
-d8 = copy.copy(DATA_CONFIG["num_hira"])
-d8["encoder"] = "ScaleSplitNDirection"
-d8["encoder_params"] = {"n_direction": 8}
-d8["port"] = 9997
-DATA_CONFIG["num_hira-d8"] = d8
+_CONFIG_CACHE = {}
+_CONFIG_CACHE_TIME = {}
+CACHE_EXPIRE = 10
 
-d4 = copy.copy(d8)
-d4["encoder_params"] = {"n_direction": 4}
-d4["port"] = 9996
-DATA_CONFIG["num_hira-d4"] = d4
+def load_config(charset_type):
+    if charset_type not in _CONFIG_CACHE or _CONFIG_CACHE_TIME[charset_type]+CACHE_EXPIRE < time.time():
+        cc = ConfigClient(CONFIG_SERVER_URL)
+        _CONFIG_CACHE[charset_type] = cc.get_config(charset_type)
+        _CONFIG_CACHE_TIME[charset_type] = time.time()
+    return copy.copy(_CONFIG_CACHE[charset_type])
 
 def get_chars(charset_type):
-    return DATA_CONFIG[charset_type]["chars"]
+    return load_config(charset_type)["chars"]
 
 def get_host_port(charset_type):
-    cfg = DATA_CONFIG[charset_type]
-    return cfg["host"], cfg["port"]
+    cfg = load_config(charset_type)
+    return cfg["infer_server_host"], cfg["infer_server_port"]
 
 def get_encoder_type(charset_type):
-    cfg = DATA_CONFIG[charset_type]
+    cfg = load_config(charset_type)
     return cfg["encoder"], cfg["encoder_params"]
 

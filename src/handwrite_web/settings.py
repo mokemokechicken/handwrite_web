@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     "web",
     "dataservice",
+    "configservice",
     "django_nose",
 )
 

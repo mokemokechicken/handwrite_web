@@ -1,0 +1,20 @@
+{
+    "num_hira": {
+        "chars": "０１２３４５６７８９あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん",
+        "infer_server_host": "localhost",
+        "infer_server_port": 9998,
+        "data_server_url": "http://54.248.76.99:7777/data/api",
+        "encoder": "SimpleNDirection",
+        "encoder_params": {"n_direction": 8}
+    }
+
+    ,"num_hira-d4": {
+        "chars": "０１２３４５６７８９あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん",
+        "infer_server_host": "localhost",
+        "infer_server_port": 9996,
+        "data_server_url": "http://54.248.76.99:7777/data/api",
+        "encoder": "ScaleSplitNDirection",
+        "encoder_params": {"n_direction": 8}
+    }
+
+}

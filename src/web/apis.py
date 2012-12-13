@@ -13,7 +13,6 @@ from web.services import service_post_hwdata, service_infer_version,\
 from django.views.decorators.csrf import csrf_view_exempt
 from django.http import HttpResponseBadRequest
 
-
 @csrf_view_exempt
 def api_hwdata(request, chartype):
     if request.method not in ("POST",):

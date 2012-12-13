@@ -14,6 +14,7 @@ class ConvertToImage(object):
     def __init__(self, size=None):
         self.size = size or 30
         self.num_in = self.size * self.size
+        self.seq_len = 1
 
     def encode_strokes(self, hwdata, noise_range=None):
         image = Image.new("L", (hwdata.width, hwdata.height), 0)

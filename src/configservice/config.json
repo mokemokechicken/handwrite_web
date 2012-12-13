@@ -17,4 +17,12 @@
         "encoder_params": {"n_direction": 4}
     }
 
+    ,"num_hira-i30": {
+        "chars": "０１２３４５６７８９あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん",
+        "infer_server_host": "localhost",
+        "infer_server_port": 9990,
+        "data_server_url": "http://54.248.76.99:7777/data/api",
+        "encoder": "ImageEncoder",
+        "encoder_params": {"size": 30}
+    }
 }

@@ -13,6 +13,10 @@ from web.services import service_post_hwdata, service_infer_version,\
 from django.views.decorators.csrf import csrf_view_exempt
 from django.http import HttpResponseBadRequest
 
+from prjlib.django.middleware.httpauth import http_login_required
+private_area = http_login_required(realm='HandWrite Demo')
+
+
 @csrf_view_exempt
 def api_hwdata(request, chartype):
     if request.method not in ("POST",):
@@ -36,6 +40,7 @@ def api_check_data(request, chartype):
     else:
         return HttpResponseBadRequest(response)
 
+@private_area
 @csrf_view_exempt
 def api_checked(request, chartype):
     success, response = service_data_checked(request, chartype)
